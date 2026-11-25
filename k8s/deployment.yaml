@@ -37,6 +37,12 @@ spec:
             periodSeconds: 5
             timeoutSeconds: 3
             failureThreshold: 2
+          livenessProbe:
+            httpGet: /healthz
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
           # TODO REMEDIAL 1: resources.requests (cpu, memory) și resources.limits.memory.
           #   Decide dacă pui limits.cpu sau nu, și scrie DE CE în notes.md.
           # TODO REMEDIAL 2: readinessProbe și livenessProbe de tip httpGet pe /healthz:8080
