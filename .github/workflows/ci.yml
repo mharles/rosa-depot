@@ -76,6 +76,7 @@ jobs:
       - uses: helm/kind-action@ea822c7bf1874f08e5a491df991c228edffc3376 # v1.15.2
         with:
           version: v0.17.0
+          cluster_name: kind
       # TODO: pune imaginea în cluster (pull din GHCR public SAU docker pull + kind load)
       - run: docker pull ghcr.io/${{ github.repository_owner }}/rosa-depot:${{ github.sha }} && kind load docker-image ghcr.io/${{ github.repository_owner }}/rosa-depot:${{ github.sha }}
       # TODO: sed IMAGE_PLACEHOLDER / VERSION_PLACEHOLDER în k8s/deployment.yaml, kubectl apply
