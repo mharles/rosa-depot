@@ -1,0 +1,54 @@
+# Schelet. Structura e dată, deciziile sunt ale tale. Fiecare TODO = un obiectiv din misiune.
+# REGULĂ DE CASĂ (Dona Rosa): niciun `uses: owner/action@vX` în varianta finală.
+#   Fiecare acțiune third-party = SHA complet de 40 de caractere + comentariu cu versiunea:
+#   uses: actions/checkout@<sha40> # vX.Y.Z
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# TODO: permissions la nivel de workflow = minimul absolut (hint: contents: read).
+#       Ridici permisiunile DOAR pe job-ul care are nevoie (packages: write la build).
+
+# TODO: concurrency, ca două push-uri rapide pe main să nu facă deploy în paralel.
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4            # TODO: pin SHA
+      - uses: actions/setup-python@v5        # TODO: pin SHA, python 3.11, cache pip
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements-dev.txt
+      - run: ruff check .
+      - run: pytest -q
+
+  build-scan:
+    needs: test
+    runs-on: ubuntu-latest
+    # TODO: permissions pentru acest job (ce îi trebuie ca să împingă în GHCR?)
+    # TODO: pe pull_request construiești și scanezi, dar NU împingi în registry. De ce?
+    steps:
+      - uses: actions/checkout@v4            # TODO: pin SHA
+      # TODO: docker/setup-buildx-action, docker/login-action (ghcr.io, GITHUB_TOKEN)
+      # TODO: docker/build-push-action → tag ghcr.io/<owner>/rosa-depot:${{ github.sha }}
+      #       (owner-ul în lowercase! GHCR refuză majuscule)
+      #       NU `latest` ca singur tag.
+      # TODO: aquasecurity/trivy-action pe imagine:
+      #       severity HIGH,CRITICAL · ignore-unfixed: true · exit-code: 1
+      #       (citește incidentul din 19 martie 2026 înainte să alegi cum o referențiezi)
+
+  deploy:
+    needs: build-scan
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4            # TODO: pin SHA
+      # TODO: helm/kind-action → cluster kind efemer în runner
+      # TODO: pune imaginea în cluster (pull din GHCR public SAU docker pull + kind load)
+      # TODO: sed IMAGE_PLACEHOLDER / VERSION_PLACEHOLDER în k8s/deployment.yaml, kubectl apply
+      # TODO: kubectl rollout status deploy/rosa-depot --timeout=120s  (job-ul pică dacă rollout-ul pică)
+      # TODO: smoke test: port-forward + curl /healthz; la eșec, dump `kubectl describe` + `kubectl logs`

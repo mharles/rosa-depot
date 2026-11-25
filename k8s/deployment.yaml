@@ -1,0 +1,39 @@
+# Deploy-ul Donei Rosa. Imaginea e înlocuită de pipeline (IMAGE_PLACEHOLDER).
+# TODO-urile marcate REMEDIAL le scrii TU și le justifici în notes.md.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rosa-depot
+  labels: { app: rosa-depot }
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: rosa-depot }
+  template:
+    metadata:
+      labels: { app: rosa-depot }
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+        - name: api
+          image: IMAGE_PLACEHOLDER
+          ports:
+            - containerPort: 8080
+          env:
+            - name: APP_VERSION
+              value: VERSION_PLACEHOLDER
+          # TODO REMEDIAL 1: resources.requests (cpu, memory) și resources.limits.memory.
+          #   Decide dacă pui limits.cpu sau nu, și scrie DE CE în notes.md.
+          # TODO REMEDIAL 2: readinessProbe și livenessProbe de tip httpGet pe /healthz:8080
+          #   cu timeoutSeconds / periodSeconds / failureThreshold REALISTE (nu 1000s).
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rosa-depot
+spec:
+  selector: { app: rosa-depot }
+  ports:
+    - port: 80
+      targetPort: 8080
