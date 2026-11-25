@@ -4,9 +4,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /srv
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt && \\
-    pip uninstall --yes wheel && \\
-    pip uninstall --yes jaraco.conetext
+RUN pip install --no-cache-dir -r requirements.txt \
+ && pip uninstall --yes setuptools wheel
 
 COPY app/ app/
 
