@@ -59,7 +59,7 @@ jobs:
       # TODO: aquasecurity/trivy-action pe imagine:
       #       severity HIGH,CRITICAL · ignore-unfixed: true · exit-code: 1
       #       (citește incidentul din 19 martie 2026 înainte să alegi cum o referențiezi)
-      - uses: aquasecurity/trivy-action@f5c6e1d3b8a9f4e2b9c1e5f6d7e8f9a0b1c2d3e4 #v0.10.0  # TODO: pin SHA
+      - uses: aquasecurity/trivy-action@4813cf5cfdaf22d3caf8ca2a2cc89448a5ef994f #v0.36.0  # TODO: pin SHA
         with:
           image-ref: ghcr.io/${{ github.repository_owner }}/rosa-depot:${{ github.sha }}
           severity: HIGH,CRITICAL
