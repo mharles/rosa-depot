@@ -5,7 +5,7 @@ WORKDIR /srv
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt && \\
-    pip uninstall --yes pip setuptools wheel && \\
+    pip uninstall --yes wheel && \\
     pip uninstall --yes jaraco.conetext
 
 COPY app/ app/
