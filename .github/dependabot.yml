@@ -1,0 +1,17 @@
+version: 2
+updates:
+  # Obligatoriu pentru misiune: ține la zi pinurile pe SHA (citește comentariul # vX.Y.Z).
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
